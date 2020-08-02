@@ -19,7 +19,9 @@
 #' @param strokewidth the stroke width of the shape. Defaults to 5.
 #' @param selectable logical. If TRUE, the user can modify interactively the shape's size, position and rotation. Defaults to TRUE
 #' @param isDrawingMode logical. If TRUE, the user can draw inside the canvas element.
-#' @param radius Mandatory if the chosen shape is a 'Circle'. Defaults to NULL
+#' @param radius mandatory if the chosen shape is a 'Circle'. Defaults to NULL
+#' @param polx a vector of the coordinate points of the polygon, from the left.
+#' @param poly a vector of the coordinate points of the polygon, from the top
 #'
 #' @return a shape object inside a canvas
 #' @export
@@ -70,15 +72,42 @@ fabric_shape <- function(cid,
                          strokewidth = 5,
                          selectable = TRUE,
                          isDrawingMode = FALSE,
-                         radius = NULL) {
+                         radius = NULL,
+                         polx = NULL,
+                         poly = NULL) {
 
   if (!shape %in% c("Rect",
                     "Circle",
-                    "Triangle")) {
-    stop(paste0(shape, " shape is not available, choices are Rect, Circle and Triangle"))
+                    "Triangle",
+                    "Polygon")) {
+    stop(paste0(shape, " shape is not available, choices are Rect, Circle, Triangle and Polygon"))
   }
 
 
+  if (shape == "Polygon" &
+      is.null(poly) & is.null(polx)) {
+    stop("If you draw a Circle, you need to provide a radius")
+  }
+
+  if (shape == "Polygon" &
+      is.null(polx)) {
+    stop("If you draw a Circle, you need to provide a radius")
+  }
+
+  if (shape == "Polygon" &
+      is.null(poly)) {
+    stop("If you draw a Circle, you need to provide a radius")
+  }
+
+  if (shape == "Polygon" &
+
+      length(polx) != length(poly)
+
+  ){
+
+    stop("polx and poly must have the same length")
+
+  }
 
   if (shape == "Circle" &
       is.null(radius)) {
@@ -94,16 +123,67 @@ fabric_shape <- function(cid,
   isDrawingMode <- ifelse(isDrawingMode == TRUE, "true", "false")
 
 
-  htmltools::tagList(
-    htmltools::tags$canvas(
-      id = cid,
-      width = cwidth,
-      height = cheight
-    ),
+  if(shape == "Polygon"){
 
-    htmltools::tags$script(htmltools::HTML(
-      glue::glue(
-        "
+
+  data <- paste("{x:", polx, ", y:", poly, "}", collapse = ",")
+
+
+    htmltools::tagList(
+      htmltools::tags$canvas(
+        id = cid,
+        width = cwidth,
+        height = cheight
+      ),
+
+      htmltools::tags$script(htmltools::HTML(
+        glue::glue(
+          "
+var {cid} = new fabric.Canvas('{cid}', {{
+
+    isDrawingMode: {isDrawingMode}
+
+    }});
+
+{cid}.backgroundColor = '{cfill}';
+
+
+var {shapeId} = new fabric.{shape}(
+
+[{data}], {{
+
+fill: '{fill}'
+
+
+}});
+
+{cid}.add({shapeId});
+
+
+  "
+        )
+      ))
+
+
+
+    )
+
+
+
+
+  } else {
+
+
+    htmltools::tagList(
+      htmltools::tags$canvas(
+        id = cid,
+        width = cwidth,
+        height = cheight
+      ),
+
+htmltools::tags$script(htmltools::HTML(
+        glue::glue(
+          "
 
 var {cid} = new fabric.Canvas('{cid}', {{
 
@@ -135,12 +215,21 @@ selectable: {selectable},
 
 
   "
-      )
-    ))
+        )
+      ))
 
 
 
-  )
+    )
+
+
+
+
+
+  }
+
+
+
 
 
 

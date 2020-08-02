@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.com/feddelegrand7/fabricerin.svg?branch=master)](https://travis-ci.com/feddelegrand7/fabricerin)
 <!-- badges: end -->
 
 The `fabricerin` (spelled **fabrikerine**) package allows you to create
@@ -55,10 +57,8 @@ ui <- fluidPage(
   h1("You can take some notes below"), 
   
   fabric_drawing(cid = "canvas1", 
-                 cwidth = 400, 
-                 cheight = 400, 
-                 drawingWidth = 5, 
-                 drawingColor = "lightblue")
+                drawingColor = "darkblue", 
+                gumSize = 50)
 )
 
 server <- function(input, output){}
@@ -66,19 +66,15 @@ server <- function(input, output){}
 shinyApp(ui, server)
 ```
 
-![](man/figures/example1.gif)
-
-Works the same way in RMarkdown:
-
-![](man/figures/example2.gif)
+![](man/figures/gumexample.gif)
 
 ## fabric\_shape(): Render shape objects in canvas
 
 -----
 
-Currently, `fabricerin` supports three types of shapes: Rectangles,
-Triangles and Circles. The user can interact with the shape and modify
-its position, size and rotation. If you want to disable this
+Currently, `fabricerin` supports three types of shapes: Rectangle,
+Triangle, Circle and Polygon. The user can interact with the shape and
+modify its position, size and rotation. If you want to disable this
 interactivity, you can set `selectable =FALSE`
 
 ``` r
@@ -116,7 +112,7 @@ shinyApp(ui, server)
 
 ![](man/figures/example3.gif)
 
-You can add as may shape as you want to an existing canvas using the
+You can add as many shape as you want to an existing canvas using the
 `fabric_shape_add()` function. **Don’t forget to reference the
 preexisting canvas with its ID:**
 
@@ -196,6 +192,9 @@ Similar to shapes, you can add images to preexisting canvas using the
 `fabric_image_add()` function:
 
 ``` r
+library(shiny)
+library(fabricerin)
+
 ui <- fluidPage(
 
  use_fabric(),
@@ -217,6 +216,8 @@ server <- function(input, output) {}
 
 shinyApp(ui = ui, server = server)
 ```
+
+![](man/figures/r_dplyr_logo.png)
 
 ## fabric\_text(): Render text elements in canvas
 
