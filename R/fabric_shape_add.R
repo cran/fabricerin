@@ -17,6 +17,9 @@
 #' @param strokewidth the stroke width of the shape. Defaults to 5.
 #' @param selectable logical. If TRUE, the user can modify interactively the shape. Defaults to TRUE
 #' @param radius Mandatory if the chosen shape is a 'Circle'. Defaults to NULL
+#' @param xPolygon a vector of the coordinate points of the polygon, from the left.
+#' @param yPolygon a vector of the coordinate points of the polygon, from the top
+
 #'
 #' @return a shape object inside a preexisting canvas element
 #' @export
@@ -27,7 +30,6 @@
 #'
 #' ui <- fluidPage(
 #'
-#' use_fabric(),
 #'
 #' fabric_shape(cid = "canvas",
 #'              shapeId = "shape1",
@@ -87,49 +89,118 @@ fabric_shape_add <- function(cid,
                              strokecolor = "darkblue",
                              strokewidth = 5,
                              selectable = TRUE,
-                             radius = NULL){
+                             radius = NULL,
+                             xPolygon = NULL,
+                             yPolygon = NULL){
 
 
   if (!shape %in% c("Rect",
                     "Circle",
-                    "Triangle")) {
-    stop(paste0(shape, " shape is not available, choices are Rect, Circle and Triangle"))
+                    "Triangle",
+                    "Polygon")) {
+    stop(paste0(shape, " shape is not available, choices are Rect, Circle, Triangle and Polygon"))
   }
 
+
+  if (shape == "Polygon" &
+      is.null(yPolygon) & is.null(xPolygon)) {
+    stop("If you draw a Polygon, you need to set the xPolygon and yPolygon arguments")
+  }
+
+  if (shape == "Polygon" &
+      is.null(xPolygon)) {
+    stop("If you draw a Polygon, you need to set the xPolygon argument")
+  }
+
+  if (shape == "Polygon" &
+      is.null(yPolygon)) {
+    stop("If you draw a Polygon, you need to set the yPolygon argument")
+  }
+
+  if (shape == "Polygon" &
+
+      length(xPolygon) != length(yPolygon)
+
+  ){
+
+    stop("xPolygon and yPolygon must have the same length")
+
+  }
 
   if (shape == "Circle" &
       is.null(radius)) {
     stop("If you draw a Circle, you need to provide a radius")
   }
 
+  radius <-
+    ifelse(!is.null(radius), glue::glue("radius:{radius}"), "")
 
-  radius <- ifelse(!is.null(radius), glue::glue("radius:{radius}"), "")
 
   selectable <- ifelse(selectable == TRUE, "true", "false")
 
-  htmltools::tags$script(htmltools::HTML(glue::glue(
-    "
 
+
+  if(shape == "Polygon"){
+
+
+    data <- paste("{x:", xPolygon, ", y:", yPolygon, "}", collapse = ",")
+
+
+
+
+      htmltools::tags$script(htmltools::HTML(
+        glue::glue(
+          "
+
+var {shapeId} = new fabric.{shape}(
+
+[{data}], {{
+
+fill: '{fill}',
+left: {left},
+top: {top},
+width: {width},
+height: {height},
+angle: {angle},
+opacity: {opacity},
+stroke: '{strokecolor}',
+strokeWidth: {strokewidth},
+selectable: {selectable}
+
+}});
+
+{cid}.add({shapeId});
+
+
+  "
+        )
+      )
+
+
+
+    )
+
+
+
+
+  } else {
+
+
+
+      htmltools::tags$script(htmltools::HTML(
+        glue::glue(
+          "
 var {shapeId} = new fabric.{shape}({{
 
 left: {left},
-
 top: {top},
-
 fill: '{fill}',
-
 width: {width},
-
 height: {height},
-
 angle: {angle},
-
 opacity: {opacity},
-
 stroke: '{strokecolor}',
-
 strokeWidth: {strokewidth},
-
 selectable: {selectable},
 
 {radius}
@@ -140,7 +211,40 @@ selectable: {selectable},
 
 
   "
-  )))
+        )
+      )
+
+
+
+    )
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

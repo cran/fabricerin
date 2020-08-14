@@ -16,7 +16,6 @@
 #'
 #' ui <- fluidPage(
 #'
-#' use_fabric(),
 #'
 #'
 #' fabric_shape(cid = "canvas123",
@@ -55,7 +54,10 @@ fabric_curtail <- function(cid,
 
   type <- ifelse(type == "background", "setBackgroundImage", "setOverlayImage")
 
-  htmltools::tags$script(htmltools::HTML(glue::glue("
+
+
+
+    htmltools::tags$script(htmltools::HTML(glue::glue("
 
 
 
@@ -68,22 +70,10 @@ fabric_curtail <- function(cid,
           originY: 'top'
        }});
        {cid}.{type}(img, {cid}.renderAll.bind({cid}));
-   }});
+   }}, {{ crossOrigin: 'anonymous'}});
 
 
                                     ")))
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

@@ -23,9 +23,6 @@
 #' img2 <- "https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png"
 #' ui <- fluidPage(
 #'
-#' use_fabric(),
-#'
-#'
 #'
 #' fabric_image(cid = "cimage",
 #'              imgId = "Rimg",
@@ -65,6 +62,7 @@ fabric_image_add <- function(cid,
 
   selectable <- ifelse(selectable == TRUE, "true", "false")
 
+
   htmltools::tags$script(htmltools::HTML(
     glue::glue(
       "
@@ -87,7 +85,10 @@ fabric_image_add <- function(cid,
 
  {cid}.add({imgId});
 
-  });
+ {cid}.renderAll();
+
+
+  }}, {{ crossOrigin: 'anonymous'}});
 
 
       "

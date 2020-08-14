@@ -40,7 +40,6 @@
 #'
 #'ui <- fluidPage(
 #'
-#'use_fabric(),
 #'
 #'fabric_text(cid = "can",
 #'          textId = "text",
@@ -116,6 +115,8 @@ fabric_text <- function(cid,
   htmltools::tagList(
 
     htmltools::tags$canvas(id = cid, width = cwidth, height = cheight),
+
+    fabric_dependency(),
 
     htmltools::tags$script(htmltools::HTML(glue::glue(
 

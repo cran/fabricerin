@@ -11,10 +11,14 @@ status](https://travis-ci.com/feddelegrand7/fabricerin.svg?branch=master)](https
 
 The `fabricerin` (spelled **fabrikerine**) package allows you to create
 easily canvas elements within your Shiny app and RMarkdown documents.
-You can use the canvas to render shapes, images and text. You can also
-create a canvas for drawing/taking notes purposes. Under the hoods,
-`fabricerin` relies on the the [fabricjs](http://fabricjs.com/)
-JavaScript library.
+Thanks to [Garrick Aden-Buie](https://twitter.com/grrrck?lang=en), you
+can also use it within your xaringan slides. You can use the canvas to
+render shapes, images and text. You can also create a canvas for
+drawing/taking notes purposes. Under the hoods, `fabricerin` relies on
+the the [fabricjs](http://fabricjs.com/) JavaScript library.
+
+
+
 
 ## Installation
 
@@ -30,13 +34,9 @@ remotes::install_github("feddelegrand7/fabricerin")
 ## Examples:
 
 First of all, I’d like to state that all the example provided apply the
-same way to Shiny and Rmd documents. Secondly, in order to use
-`fabricerin`, you always have to run the `use_fabric()` function at the
-beginning of your app/document. The function activates the
-[fabricjs](http://fabricjs.com/) library. Note that you’ll need to be
-connected to the internet. Finally, `fabricerin` is not an R wrapper for
-the fabricjs library. The package doesn’t cover all the capabilities of
-the library. The `fabricerin` package only relies on some specified
+same way to Shiny and Rmd documents (in Rmd use the functions directely (e.g. without wrapping them inside *fluidPage()*). Note that`fabricerin` is not an R wrapper
+for the fabricjs library in the sense that it doesn’t cover all the capabilities
+of the library. The `fabricerin` package relies only on some specified
 features that according to me will help Shiny/Rmd users. Of course, if
 you need some improvement, feel free to create a Pull Request.
 
@@ -52,13 +52,8 @@ library(fabricerin)
 ui <- fluidPage(
   
   
-  use_fabric(), # do not forget to include the use_fabric() function at the beginning of your document
-  
-  h1("You can take some notes below"), 
-  
-  fabric_drawing(cid = "canvas1", 
-                drawingColor = "darkblue", 
-                gumSize = 50)
+  fabric_drawing(cid = "canvas123")
+
 )
 
 server <- function(input, output){}
@@ -66,7 +61,7 @@ server <- function(input, output){}
 shinyApp(ui, server)
 ```
 
-![](man/figures/gumexample.gif)
+![](man/figures/example1.gif)
 
 ## fabric\_shape(): Render shape objects in canvas
 
@@ -85,9 +80,7 @@ library(fabricerin)
 
 ui <- fluidPage(
   
-  
-  use_fabric(), # do not forget to include the use_fabric() function at the beginning of your document
-  
+
   fabric_shape(cid = "canvaId", # canvas id
                cfill = "orange", # canvas color
                cwidth = 800, # the width of the canvas
@@ -123,8 +116,6 @@ library(fabricerin)
 
 ui <- fluidPage(
   
-  
-  use_fabric(), # do not forget to include the use_fabric() function at the beginning of your document
   
   fabric_shape(cid = "canvaId", 
                shapeId = "cr1", 
@@ -171,8 +162,6 @@ external images.
 
 ui <- fluidPage(
 
-use_fabric(),
-
 fabric_image(cid = "cimage",
               cfill = "lightblue",
               imgId = "Rimg",
@@ -196,8 +185,6 @@ library(shiny)
 library(fabricerin)
 
 ui <- fluidPage(
-
- use_fabric(),
 
  fabric_image(cid = "cimage",
               imgId = "Rimg",
@@ -230,8 +217,6 @@ out:
 
 ui <- fluidPage(
 
-use_fabric(),
-
 fabric_text(cid = "cId",
           textId = "text",
           text = " 'But A Hero Is A Guy Who Gives Out The Meat To Everyone Else. \\n I Want To Eat The Damn Meat!' \\n Monkey D. Luffy",
@@ -260,8 +245,6 @@ library(fabricerin)
 
 
 ui <- fluidPage(
-
-use_fabric(),
 
 fabric_shape(cid = "canvas123",
               cfill = "lightblue",
@@ -293,8 +276,6 @@ canvas as follows:
 ``` r
 
 ui <- fluidPage(
-
- use_fabric(),
 
  fabric_shape(cid = "canvas123",
               shapeId = "tri1",

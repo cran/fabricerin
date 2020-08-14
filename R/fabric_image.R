@@ -30,7 +30,6 @@
 #'
 #' ui <- fluidPage(
 #'
-#' use_fabric(),
 #'
 #' fabric_image(cid = "cimage",
 #'              cfill = "lightblue",
@@ -74,6 +73,9 @@ fabric_image <- function(
   htmltools::tagList(
 
     htmltools::tags$canvas(id = cid, width = cwidth, height = cheight),
+
+    fabric_dependency(),
+
 
     htmltools::tags$script(htmltools::HTML(glue::glue(
 
